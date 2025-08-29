@@ -20,4 +20,5 @@ jinja2
 imblearn
 openpyxl
 python-dotenv
+xgboost
 -e .

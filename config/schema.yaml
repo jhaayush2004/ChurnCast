@@ -1,0 +1,79 @@
+# config/schema.yaml
+
+# Data validation schema based on the notebook's columns
+columns:
+  CustomerID: int64
+  Churn: int64
+  Tenure: float64
+  PreferredLoginDevice: object
+  CityTier: int64
+  WarehouseToHome: float64
+  PreferredPaymentMode: object
+  Gender: object
+  HourSpendOnApp: float64
+  NumberOfDeviceRegistered: int64
+  PreferedOrderCat: object
+  SatisfactionScore: int64
+  MaritalStatus: object
+  NumberOfAddress: int64
+  Complain: int64
+  OrderAmountHikeFromlastYear: float64
+  CouponUsed: float64
+  OrderCount: float64
+  DaySinceLastOrder: float64
+  CashbackAmount: float64
+
+numerical_columns:
+  - Tenure
+  - CityTier
+  - WarehouseToHome
+  - HourSpendOnApp
+  - NumberOfDeviceRegistered
+  - SatisfactionScore
+  - NumberOfAddress
+  - Complain
+  - OrderAmountHikeFromlastYear
+  - CouponUsed
+  - OrderCount
+  - DaySinceLastOrder
+  - CashbackAmount
+
+categorical_columns:
+  - PreferredLoginDevice
+  - PreferredPaymentMode
+  - Gender
+  - PreferedOrderCat
+  - MaritalStatus
+
+# Columns to be target encoded
+features_to_encode:
+  - PreferredPaymentMode
+  - PreferredLoginDevice
+  - Gender
+  - PreferedOrderCat
+  - MaritalStatus
+  
+# Dropped columns
+drop_columns:
+  - CustomerID
+  - _id
+
+feature_columns_after_imputation:
+  - Tenure
+  - WarehouseToHome
+  - HourSpendOnApp
+  - OrderAmountHikeFromlastYear
+  - DaySinceLastOrder
+  - OrderCount
+  - CouponUsed
+  - NumberOfDeviceRegistered
+  - SatisfactionScore
+  - CashbackAmount
+  - NumberOfAddress
+  - PreferredLoginDevice
+  - CityTier
+  - PreferredPaymentMode
+  - Gender
+  - MaritalStatus
+  - Complain
+  - Age
