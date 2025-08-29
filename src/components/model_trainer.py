@@ -45,12 +45,9 @@ class ModelTrainer:
             model = XGBClassifier(
                 n_estimators=self.model_trainer_config.n_estimators,
                 max_depth=self.model_trainer_config.max_depth,
-                eta=self.model_trainer_config.eta,
-                alpha=self.model_trainer_config.alpha,
-                lambda_param=self.model_trainer_config.lambda_param,
-                objective='binary:logistic',  # Standard for binary classification
-                eval_metric='logloss',        # A good metric for classification
-                random_state=42
+                learning_rate=self.model_trainer_config.eta,   # use learning_rate instead of eta (alias but safer)
+                reg_alpha=self.model_trainer_config.alpha,     # correct param name
+                reg_lambda=self.model_trainer_config.lambda_param,  # correct param name
             )
 
             # Fit the model

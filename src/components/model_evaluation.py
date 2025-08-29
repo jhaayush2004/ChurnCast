@@ -5,7 +5,8 @@ import pandas as pd
 from sklearn.metrics import f1_score
 from typing import Optional
 from dataclasses import dataclass
-
+# In your prediction/evaluation script
+from src.components.data_transformation import NotebookImputer, TargetEncoder, FeatureEngineering, DropColumnsTransformer
 from src.exception import MyException
 from src.logger import logging
 from src.utils.main_utils import load_object, read_yaml_file
@@ -13,7 +14,7 @@ from src.entity.config_entity import ModelEvaluationConfig
 from src.entity.artifact_entity import DataIngestionArtifact, ModelTrainerArtifact, DataTransformationArtifact, ModelEvaluationArtifact
 from src.entity.s3_estimator import Proj1Estimator
 from src.constants import TARGET_COLUMN, SCHEMA_FILE_PATH
-
+from src.components.data_transformation import NotebookImputer, TargetEncoder, FeatureEngineering, DropColumnsTransformer
 @dataclass
 class EvaluateModelResponse:
     trained_model_f1_score: float

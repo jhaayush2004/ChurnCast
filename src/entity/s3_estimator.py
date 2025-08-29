@@ -3,7 +3,9 @@ from src.exception import MyException
 from src.entity.estimator import MyModel
 import sys
 from pandas import DataFrame
-
+import os
+import sys
+from src.components.data_transformation import NotebookImputer, TargetEncoder, FeatureEngineering
 
 class Proj1Estimator:
     """

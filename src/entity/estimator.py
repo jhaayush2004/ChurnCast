@@ -26,21 +26,21 @@ class MyModel:
         self.preprocessing_object = preprocessing_object
         self.trained_model_object = trained_model_object
 
-    def predict(self, dataframe: pd.DataFrame) -> DataFrame:
-        """
-        Function accepts preprocessed inputs (with all custom transformations already applied),
-        applies scaling using preprocessing_object, and performs prediction on transformed features.
-        """
+    def predict(self, dataframe: pd.DataFrame) -> pd.DataFrame:
         try:
             logging.info("Starting prediction process.")
 
-            # Step 1: Apply scaling transformations using the pre-trained preprocessing object
+            # Drop schema-defined columns
+            from src.utils.main_utils import read_yaml_file
+            schema_config = read_yaml_file("config/schema.yaml")
+            drop_cols = schema_config.get("drop_columns", [])
+            dataframe = dataframe.drop(columns=drop_cols, errors="ignore")
+
+            # Transform
             transformed_feature = self.preprocessing_object.transform(dataframe)
 
-            # Step 2: Perform prediction using the trained model
-            logging.info("Using the trained model to get predictions")
+            # Predict
             predictions = self.trained_model_object.predict(transformed_feature)
-
             return predictions
 
         except Exception as e:
