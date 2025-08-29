@@ -23,6 +23,12 @@ columns:
   DaySinceLastOrder: float64
   CashbackAmount: float64
 
+outlier_removal_col:
+  - Tenure
+  - WarehouseToHome
+  - NumberOfAddress
+  - DaySinceLastOrder
+  
 numerical_columns:
   - Tenure
   - CityTier

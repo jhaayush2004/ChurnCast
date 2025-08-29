@@ -18,6 +18,57 @@ from src.exception import MyException
 from src.logger import logging
 from src.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file
 
+# Add this new class to your script
+class NotebookImputer(BaseEstimator, TransformerMixin):
+    """
+    A custom imputer that replicates the sequential patching strategy
+    from the experimental notebook.
+    """
+    def __init__(self):
+        # Define the columns for each imputation strategy
+        self.mice_cols = ['Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromlastYear', 'DaySinceLastOrder', 'OrderCount', 'CouponUsed']
+        self.knn_cols = ['Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromlastYear', 'DaySinceLastOrder', 'OrderCount', 'CouponUsed', 'NumberOfDeviceRegistered', 'SatisfactionScore', 'CashbackAmount']
+        self.median_cols = ['OrderCount', 'CouponUsed']
+
+        # Define which columns to KEEP from each strategy
+        self.mice_cols_to_keep = ['Tenure']
+        self.knn_cols_to_keep = ['WarehouseToHome', 'HourSpendOnApp', 'DaySinceLastOrder', 'OrderAmountHikeFromlastYear']
+
+    def fit(self, X, y=None):
+        logging.info("Fitting the custom NotebookImputer")
+        # Create and fit all the imputers on the training data
+        self.mice_imputer_ = IterativeImputer(max_iter=50, random_state=0)
+        self.mice_imputer_.fit(X[self.mice_cols])
+
+        self.knn_imputer_ = KNNImputer(n_neighbors=5)
+        self.knn_imputer_.fit(X[self.knn_cols])
+
+        self.median_imputer_ = SimpleImputer(strategy='median')
+        self.median_imputer_.fit(X[self.median_cols])
+        
+        return self
+
+    def transform(self, X, y=None):
+        logging.info("Applying the custom NotebookImputer transform")
+        df = X.copy()
+
+        # Step 1: Apply MICE and keep only the specified column
+        mice_imputed_data = self.mice_imputer_.transform(df[self.mice_cols])
+        df_mice_imputed = pd.DataFrame(mice_imputed_data, columns=self.mice_cols, index=df.index)
+        for col in self.mice_cols_to_keep:
+            df[col] = df_mice_imputed[col]
+
+        # Step 2: Apply KNN and keep only the specified columns
+        knn_imputed_data = self.knn_imputer_.transform(df[self.knn_cols])
+        df_knn_imputed = pd.DataFrame(knn_imputed_data, columns=self.knn_cols, index=df.index)
+        for col in self.knn_cols_to_keep:
+            df[col] = df_knn_imputed[col]
+
+        # Step 3: Apply Median and update its columns
+        median_imputed_data = self.median_imputer_.transform(df[self.median_cols])
+        df[self.median_cols] = median_imputed_data
+
+        return df
 # TargetEncoder and FeatureEngineering classes remain the same
 class TargetEncoder(BaseEstimator, TransformerMixin):
     def __init__(self, features_to_encode):
@@ -65,52 +116,30 @@ class FeatureEngineering(BaseEstimator, TransformerMixin):
 
 
 # FINAL CORRECTED PIPELINE BUILDER
-def get_data_transformer_object(schema_config) -> ColumnTransformer:
+# Replace your existing function with this one
+def get_data_transformer_object(schema_config) -> Pipeline:
     try:
-        numerical_cols = schema_config.get('numerical_columns', [])
+        logging.info("Building preprocessor pipeline based on notebook strategy.")
+        
         categorical_cols_to_encode = schema_config.get('features_to_encode', [])
         
-        feature_engineering_cols = ["HourSpendOnApp", "NumberOfDeviceRegistered"]
-        numerical_cols_for_pipeline = [col for col in numerical_cols if col not in feature_engineering_cols]
-
-        # Configure imputer for the feature engineering pipeline
-        fe_imputer = KNNImputer(n_neighbors=5)
-        fe_imputer.set_output(transform="pandas")
-        feature_engineering_pipeline = Pipeline(steps=[
-            ('imputer', fe_imputer),
-            ('engineering', FeatureEngineering())
-        ])
-
-        # Configure pipeline for other numerical features
-        numerical_pipeline = Pipeline(steps=[
-            ('imputer', KNNImputer(n_neighbors=5)),
+        # This is a clean, sequential pipeline that perfectly mirrors your notebook
+        final_pipeline = Pipeline(steps=[
+            # Step 1: Apply your custom sequential imputation
+            ('notebook_imputation', NotebookImputer()),
+            
+            # Step 2: Encode categorical features. Receives a DF, works correctly.
+            ('target_encoder', TargetEncoder(features_to_encode=categorical_cols_to_encode)),
+            
+            # Step 3: Engineer features. Receives a DF, works correctly.
+            ('feature_engineering', FeatureEngineering()),
+            
+            # Step 4: Scale all resulting numeric columns.
             ('scaler', StandardScaler())
         ])
 
-        # --- THIS IS THE FIX ---
-        # 1. Configure the imputer for the categorical pipeline to output pandas
-        cat_imputer = SimpleImputer(strategy="most_frequent")
-        cat_imputer.set_output(transform="pandas")
-
-        # 2. Use this pre-configured imputer in the pipeline
-        # This ensures TargetEncoder receives a DataFrame.
-        categorical_pipeline = Pipeline(steps=[
-            ('imputer', cat_imputer),
-            ('target_encoder', TargetEncoder(features_to_encode=categorical_cols_to_encode))
-        ])
-
-        # The master preprocessor now correctly handles all data types
-        preprocessor = ColumnTransformer(
-            [
-                ("feature_engineering", feature_engineering_pipeline, feature_engineering_cols),
-                ("numerical_pipeline", numerical_pipeline, numerical_cols_for_pipeline),
-                ("categorical_pipeline", categorical_pipeline, categorical_cols_to_encode)
-            ],
-            remainder='drop'
-        )
-        
         logging.info("Final Preprocessing Pipeline Initialized")
-        return preprocessor
+        return final_pipeline
 
     except Exception as e:
         raise MyException(e, sys) from e
@@ -162,7 +191,7 @@ class DataTransformation:
             input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN], axis=1)
             target_feature_test_df = test_df[TARGET_COLUMN]
 
-            numerical_cols_for_outliers = self._schema_config.get('numerical_columns', [])
+            numerical_cols_for_outliers = self._schema_config.get('outlier_removal_col', [])
             for col in numerical_cols_for_outliers:
                 if col in input_feature_train_df.columns:
                      input_feature_train_df, target_feature_train_df = self._handle_outliers(input_feature_train_df, target_feature_train_df, col)
