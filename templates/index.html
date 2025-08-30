@@ -3,115 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Churn Prediction</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>ChurnCast- Made with ❤️ by JhaAyush </title>
+    <style>
+        /* styles.css */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        /* New Slideshow Container */
+        .bg-slideshow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Place it behind all content */
+        }
+
+        /* Individual Slides */
+        .bg-slideshow div {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0;
+            animation: crossfade 24s linear infinite;
+        }
+
+        /* Assign images and animation delays to create a staggered fade effect */
+        .bg-slideshow div:nth-child(1) {
+            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');
+            animation-delay: 0s;
+        }
+        .bg-slideshow div:nth-child(2) {
+            background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop');
+            animation-delay: 6s;
+        }
+        .bg-slideshow div:nth-child(3) {
+            background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop');
+            animation-delay: 12s;
+        }
+        .bg-slideshow div:nth-child(4) {
+            background-image: url('https://images.unsplash.com/photo-1542744095-291d1f67b221?q=80&w=2070&auto=format&fit=crop');
+            animation-delay: 18s;
+        }
+
+        /* New Keyframes for smooth cross-fading */
+        @keyframes crossfade {
+            0% { opacity: 0; }
+            5% { opacity: 1; }  /* Fade in */
+            25% { opacity: 1; } /* Hold */
+            30% { opacity: 0; } /* Fade out */
+            100% { opacity: 0; }
+        }
+
+        .form-container {
+            width: 85vw; 
+            max-width: 1400px; 
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); 
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffffff; /* Changed to white */
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Added text shadow for readability */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            text-align: left;
+            color: #ffffff; /* Changed to white */
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); /* Added text shadow for readability */
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: #2d3748;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        select option {
+            background-color: #ffffff;
+            color: #1a202c;
+        }
+
+        button {
+            padding: 12px;
+            background: linear-gradient(90deg, #4299e1 0%, #3182ce 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .train-button {
+            background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+            margin-top: 10px;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(235, 248, 255, 0.9);
+            border-left: 5px solid #3182ce;
+            text-align: left;
+        }
+
+        .result h2 {
+            color: #2b6cb0;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.85); /* Changed to light color */
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Added text shadow */
+            margin: 0;
+        }
+        
+        /* Responsive Grid Layout */
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                padding: 25px;
+                margin: 20px 0;
+                width: 95%; 
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Customer Churn Prediction</h1>
-        <p>Enter the customer details below to predict the likelihood of churn.</p>
+    <!-- New HTML structure for the background -->
+    <div class="bg-slideshow">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div class="form-container">
+        <h1>ChurnCast: The Autonomous Pipeline for Proactive Retention</h1>
 
         <form method="post" action="/">
-            <!-- Row 1 -->
-            <div class="form-row">
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="Tenure">Tenure (in months):</label>
-                    <input type="number" step="any" id="Tenure" name="Tenure" placeholder="e.g., 12.5" required>
+                    <label for="Tenure">Tenure (months)</label>
+                    <input type="number" step="any" id="Tenure" name="Tenure" placeholder="e.g., 12" required>
                 </div>
                 <div class="form-group">
-                    <label for="CityTier">City Tier:</label>
+                    <label for="CityTier">City Tier</label>
                     <input type="number" id="CityTier" name="CityTier" placeholder="e.g., 1" required>
                 </div>
-            </div>
-
-            <!-- Row 2 -->
-            <div class="form-row">
                 <div class="form-group">
-                    <label for="WarehouseToHome">Warehouse to Home (in km):</label>
+                    <label for="WarehouseToHome">Warehouse to Home (km)</label>
                     <input type="number" step="any" id="WarehouseToHome" name="WarehouseToHome" placeholder="e.g., 25.5" required>
                 </div>
                 <div class="form-group">
-                    <label for="HourSpendOnApp">Hours Spent on App:</label>
+                    <label for="HourSpendOnApp">Hours Spent on App</label>
                     <input type="number" step="any" id="HourSpendOnApp" name="HourSpendOnApp" placeholder="e.g., 3.5" required>
                 </div>
-            </div>
-
-            <!-- Row 3 -->
-            <div class="form-row">
                 <div class="form-group">
-                    <label for="NumberOfDeviceRegistered">Devices Registered:</label>
+                    <label for="NumberOfDeviceRegistered">Devices Registered</label>
                     <input type="number" id="NumberOfDeviceRegistered" name="NumberOfDeviceRegistered" placeholder="e.g., 3" required>
                 </div>
                 <div class="form-group">
-                    <label for="SatisfactionScore">Satisfaction Score:</label>
+                    <label for="SatisfactionScore">Satisfaction Score</label>
                     <select id="SatisfactionScore" name="SatisfactionScore" required>
-                        <option value="1">1 (Very Dissatisfied)</option>
-                        <option value="2">2</option>
-                        <option value="3">3 (Neutral)</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Very Satisfied)</option>
+                        <option value="1">1 - Very Dissatisfied</option>
+                        <option value="2">2 - Dissatisfied</option>
+                        <option value="3">3 - Neutral</option>
+                        <option value="4">4 - Satisfied</option>
+                        <option value="5">5 - Very Satisfied</option>
                     </select>
                 </div>
-            </div>
-            
-            <!-- Row 4 -->
-            <div class="form-row">
                 <div class="form-group">
-                    <label for="NumberOfAddress">Number of Addresses:</label>
+                    <label for="NumberOfAddress">Number of Addresses</label>
                     <input type="number" id="NumberOfAddress" name="NumberOfAddress" placeholder="e.g., 2" required>
                 </div>
                 <div class="form-group">
-                    <label for="Complain">Complaint Raised (Last Month):</label>
+                    <label for="Complain">Complaint Raised?</label>
                     <select id="Complain" name="Complain" required>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
                     </select>
                 </div>
-            </div>
-
-            <!-- Row 5 -->
-            <div class="form-row">
                 <div class="form-group">
-                    <label for="OrderAmountHikeFromlastYear">Order Amount Hike (% from last year):</label>
+                    <label for="OrderAmountHikeFromlastYear">Order Amount Hike (%)</label>
                     <input type="number" step="any" id="OrderAmountHikeFromlastYear" name="OrderAmountHikeFromlastYear" placeholder="e.g., 15.5" required>
                 </div>
                 <div class="form-group">
-                    <label for="CouponUsed">Coupons Used (Last Month):</label>
-                    <input type="number" step="any" id="CouponUsed" name="CouponUsed" placeholder="e.g., 1.0" required>
-                </div>
-            </div>
-            
-            <!-- Row 6 -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="OrderCount">Total Orders (Last Month):</label>
-                    <input type="number" step="any" id="OrderCount" name="OrderCount" placeholder="e.g., 2.0" required>
+                    <label for="CouponUsed">Coupons Used</label>
+                    <input type="number" step="any" id="CouponUsed" name="CouponUsed" placeholder="e.g., 2" required>
                 </div>
                 <div class="form-group">
-                    <label for="DaySinceLastOrder">Days Since Last Order:</label>
-                    <input type="number" step="any" id="DaySinceLastOrder" name="DaySinceLastOrder" placeholder="e.g., 10.0" required>
-                </div>
-            </div>
-
-            <!-- Row 7 -->
-            <div class="form-row">
-                 <div class="form-group">
-                    <label for="CashbackAmount">Cashback Amount (Last Month):</label>
-                    <input type="number" step="any" id="CashbackAmount" name="CashbackAmount" placeholder="e.g., 150.75" required>
+                    <label for="OrderCount">Order Count</label>
+                    <input type="number" step="any" id="OrderCount" name="OrderCount" placeholder="e.g., 5" required>
                 </div>
                 <div class="form-group">
-                    <label for="Gender">Gender:</label>
+                    <label for="DaySinceLastOrder">Days Since Last Order</label>
+                    <input type="number" step="any" id="DaySinceLastOrder" name="DaySinceLastOrder" placeholder="e.g., 10" required>
+                </div>
+                <div class="form-group">
+                    <label for="CashbackAmount">Cashback Amount</label>
+                    <input type="number" step="any" id="CashbackAmount" name="CashbackAmount" placeholder="e.g., 159.99" required>
+                </div>
+                <div class="form-group">
+                    <label for="Gender">Gender</label>
                     <select id="Gender" name="Gender" required>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </select>
                 </div>
-            </div>
-
-            <!-- Row 8 -->
-            <div class="form-row">
                 <div class="form-group">
-                    <label for="PreferedOrderCat">Preferred Order Category:</label>
+                    <label for="PreferedOrderCat">Preferred Order Category</label>
                     <select id="PreferedOrderCat" name="PreferedOrderCat" required>
                         <option value="Laptop & Accessory">Laptop & Accessory</option>
                         <option value="Mobile Phone">Mobile Phone</option>
@@ -120,27 +299,23 @@
                         <option value="Others">Others</option>
                     </select>
                 </div>
-                 <div class="form-group">
-                    <label for="MaritalStatus">Marital Status:</label>
+                <div class="form-group">
+                    <label for="MaritalStatus">Marital Status</label>
                     <select id="MaritalStatus" name="MaritalStatus" required>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
                         <option value="Divorced">Divorced</option>
                     </select>
                 </div>
-            </div>
-
-            <!-- Row 9 -->
-            <div class="form-row">
-                 <div class="form-group">
-                    <label for="PreferredLoginDevice">Preferred Login Device:</label>
+                <div class="form-group">
+                    <label for="PreferredLoginDevice">Preferred Login Device</label>
                     <select id="PreferredLoginDevice" name="PreferredLoginDevice" required>
                         <option value="Mobile Phone">Mobile Phone</option>
                         <option value="Computer">Computer</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="PreferredPaymentMode">Preferred Payment Mode:</label>
+                    <label for="PreferredPaymentMode">Preferred Payment Mode</label>
                     <select id="PreferredPaymentMode" name="PreferredPaymentMode" required>
                         <option value="Debit Card">Debit Card</option>
                         <option value="Credit Card">Credit Card</option>
@@ -150,19 +325,23 @@
                     </select>
                 </div>
             </div>
-
-            <button type="submit">Predict Churn</button>
+            <button type="submit">Predict</button>
         </form>
 
         <form method="get" action="/train">
-            <button type="submit" class="train-button">Train New Model</button>
+            <button type="submit" class="train-button">Train Model</button>
         </form>
 
         {% if context and context != "Rendering" %}
             <div class="result">
-                <h2>Prediction Result: <span class="prediction-text">{{ context }}</span></h2>
+                <h2>{{ context }}</h2>
             </div>
         {% endif %}
+
+        <div class="footer">
+            <p>Made with ❤️ by JhaAyush</p>
+        </div>
     </div>
 </body>
 </html>
+
