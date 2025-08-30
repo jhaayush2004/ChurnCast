@@ -99,7 +99,7 @@ class DataValidation:
                 logging.info("Schema validation passed for the testing data.")
 
             validation_status = train_status and test_status
-
+#---------------
             data_validation_artifact = DataValidationArtifact(
                 validation_status=validation_status,
                 message=validation_error_msg,
