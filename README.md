@@ -1,7 +1,9 @@
 # ChurnCast - The Autonomous Retention Intelligence Engine
-**ChurnCast** represents the fusion of meticulous data science and robust MLOps automation, engineered to proactively identify customers at risk of churning with an exceptional 0.99 as recall and precison score as well as 98% accuracy. It's a comprehensive demonstration of the entire machine learning lifecycle, from deep statistical analysis and insight-driven feature engineering to a fully containerized, CI/CD-driven deployment on AWS. The result is a self-sustaining intelligence engine that is as scientifically rigorous as it is operationally resilient.
+**ChurnCast** represents the fusion of meticulous data science and robust MLOps automation, engineered to proactively identify customers at risk of churning with an exceptional performance. It's a comprehensive demonstration of the entire machine learning lifecycle, from deep statistical analysis and insight-driven feature engineering to a fully containerized, CI/CD-driven deployment on AWS. The result is a self-sustaining intelligence engine that is as scientifically rigorous as it is operationally resilient.
 
 ---
+
+![App Screenshot](https://image2url.com/images/1756651962898-4126d880-294f-4722-9bce-9e69be74b741.png)
 
 ## 🌐 Tech Stack
 
@@ -544,7 +546,7 @@ graph TD;
 ---
 
 ## Video Demo
-👉 Watch the demo on YouTube: https://youtu.be/o30qj1XNo9s
+👉 Watch the demo on YouTube: https://youtu.be/VECdHmgFqwo
 
 
 ## 🏁 License
