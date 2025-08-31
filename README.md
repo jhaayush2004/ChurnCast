@@ -553,5 +553,11 @@ graph TD;
 
 [MIT License](LICENSE)
 
+Experimentation Notebooks - 
+
+https://www.kaggle.com/code/ayushshauryajha/customer-churn/edit
+
+https://colab.research.google.com/drive/1VFvp7VLmL084IYOgagbSkhd-hjn81_b8#scrollTo=Dvnvmn38JKl3
+
 
 VISIT - [click](https://docs.google.com/document/d/1iUCK06895yOGELGyTAdYr9SRYbzywLPY/edit?usp=sharing&ouid=101578109680909709365&rtpof=true&sd=true)
