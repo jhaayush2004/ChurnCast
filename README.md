@@ -131,6 +131,8 @@ The methodology involved a **multi-layered approach** to dissect the data from e
 
 - Targeted `groupby` Aggregations: To calculate precise statistics (like mean churn rate) within specific customer segments, turning visual insights into hard numbers.
 
+**Some visuals of Exploratory Data Analysis**
+
 ![App Screenshot](https://image2url.com/images/1756642268824-d492ce70-2f90-45b0-ae1e-c098210f74d6.jpg)
 
 **Key Findings:**
