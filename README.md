@@ -548,7 +548,7 @@ graph TD;
 ---
 
 ## Video Demo
-👉 Watch the demo on YouTube: https://youtu.be/VECdHmgFqwo
+👉 Watch the demo on YouTube: https://www.youtube.com/watch?v=OVSx0p0GWb4
 
 
 ## 🏁 License
